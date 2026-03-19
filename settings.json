@@ -1,0 +1,98 @@
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL": "https://api.minimax.io/anthropic",
+    "API_TIMEOUT_MS": "3000000",
+    "ANTHROPIC_MODEL": "MiniMax-M2.7",
+    "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_TOKEN"
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Bash(openclaw models --help)",
+      "Bash(openclaw models auth --help)",
+      "Bash(openclaw models auth add --help)",
+      "Bash(openclaw agents --help)",
+      "Bash(openclaw models list)",
+      "Bash(openclaw models scan --help)",
+      "Bash(openclaw plugins --help)",
+      "Bash(openclaw plugins list)",
+      "Bash(openclaw plugins enable minimax-portal-auth)",
+      "Bash(openclaw models auth paste-token --help)",
+      "Bash(openclaw models auth paste-token --provider minimax --profile-id minimax:default --expires-in 365d)",
+      "Bash(openclaw approvals allowlist add --agent \"*\" \"Bash\\(*\\)\")",
+      "Bash(openclaw approvals set --help)",
+      "Bash(openclaw agents list)",
+      "Bash(openclaw health)",
+      "Bash(clawhub --help)",
+      "Bash(openclaw skills --help)",
+      "Bash(clawhub search coding)",
+      "Bash(clawhub install agentic-coding)",
+      "Bash(openclaw skills list)",
+      "Bash(openclaw skills info skill-creator)",
+      "Bash(python3 -c \"import pypdf; print\\(''pypdf installed''\\)\")",
+      "Bash(python3 -c \"import PyPDF2; print\\(''PyPDF2 installed''\\)\")",
+      "Bash(python3 -m pip install pypdf --quiet)",
+      "Bash(python3 -c \"from pypdf import PdfReader; print\\(''pypdf ready''\\)\")",
+      "Bash(brew install pdftotext)",
+      "Bash(pdftotext -v)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(brew install poppler)",
+      "Bash(pdftotext \"/Users/igorlipovetsky/Downloads/Air Backup/Desktop/1\\) Highgate Primary School Admission FILLED.pdf\" -)",
+      "Bash(pdftotext \"/Users/igorlipovetsky/Downloads/Air Backup/Downloads/Highgate Primary School Admission Form.pdf\" -)",
+      "Bash(pdftotext \"/Users/igorlipovetsky/Downloads/LIPOVETSKY Alice - 29-11-2016 09-12-21 10-36-10.pdf\" -)",
+      "Read(//Users/igorlipovetsky/.claude/projects/**)",
+      "Read(//Users/igorlipovetsky/.claude/**)",
+      "Read(//Users/igorlipovetsky/**)"
+    ],
+    "additionalDirectories": [
+      "/Users/igorlipovetsky/.openclaw/agents/main/agent",
+      "/Users/igorlipovetsky/.openclaw",
+      "/Users/igorlipovetsky/workspace/moshe-freed-tracker",
+      "/Users/igorlipovetsky/.claude/projects/-Users-igorlipovetsky-claude-code",
+      "/Users/igorlipovetsky/.claude/memory"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/igorlipovetsky/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/igorlipovetsky/.claude/hooks/gsd-context-monitor.js\""
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node \"/Users/igorlipovetsky/.claude/hooks/gsd-statusline.js\""
+  },
+  "enabledPlugins": {
+    "github@claude-plugins-official": true,
+    "prompt-improver@severity1-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "severity1-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "severity1/severity1-marketplace"
+      }
+    }
+  },
+  "effortLevel": "high"
+}

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude code:*)",
+      "Bash(claude:*)",
+      "Bash(open:*)",
+      "Bash(*)",
+      "Read(/Users/igorlipovetsky/.openclaw/**)",
+      "Write(/Users/igorlipovetsky/.openclaw/**)",
+      "Edit(/Users/igorlipovetsky/.openclaw/**)",
+      "Glob(/Users/igorlipovetsky/.openclaw/**)",
+      "Grep(/Users/igorlipovetsky/.openclaw/**)",
+      "Read(/Users/igorlipovetsky/claude-code/**)",
+      "Write(/Users/igorlipovetsky/claude-code/**)",
+      "Edit(/Users/igorlipovetsky/claude-code/**)",
+      "Glob(/Users/igorlipovetsky/claude-code/**)",
+      "Grep(/Users/igorlipovetsky/claude-code/**)",
+      "WebSearch",
+      "WebFetch",
+      "mcp__plugin_github_github__*"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
