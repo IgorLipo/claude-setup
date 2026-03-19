@@ -1,58 +1,39 @@
-import { Controller, Post, Body, Get, Query, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { Throttle } from '@nestjs/throttler';
-import { Request } from 'express';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '../common/enums/role.enum';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private auth: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Post('register')
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
-  register(@Body() dto: any) {
-    return this.auth.register(dto);
+  @Post('clerk/webhook')
+  async clerkWebhook(@Body() body: any) {
+    // Handle Clerk webhook - user creation/updates
+    return { received: true };
   }
 
-  @Post('login')
+  @Post('clerk/callback')
   @HttpCode(HttpStatus.OK)
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
-  login(@Body() dto: any, @Req() req: Request) {
-    return this.auth.login({ ...dto, userAgent: req.headers['user-agent'] });
-  }
-
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  refresh(@Body() dto: any) {
-    return this.auth.refreshTokens(dto);
-  }
-
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  logout(@Body() dto: any) {
-    return this.auth.logout(dto.refreshToken);
-  }
-
-  @Post('forgot-password')
-  @HttpCode(HttpStatus.OK)
-  @Throttle({ default: { limit: 3, ttl: 60000 } })
-  forgotPassword(@Body() dto: any) {
-    return this.auth.forgotPassword(dto);
-  }
-
-  @Post('reset-password')
-  resetPassword(@Body() dto: any) {
-    return this.auth.resetPassword(dto);
-  }
-
-  @Post('verify-email')
-  verifyEmail(@Body() dto: any) {
-    return this.auth.verifyEmail(dto);
+  async clerkCallback(@Body() body: { token: string }) {
+    const user = await this.authService.validateToken(body.token);
+    if (!user) throw new Error('Invalid token');
+    return { user, token: body.token };
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  me(@Req() req: Request & { user: { userId: string } }) {
-    return this.auth.getProfile(req.user.userId);
+  async me(@Req() req: any) {
+    return req.user;
+  }
+
+  @Post('admin/assign-role')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async assignRole(@Body() body: { clerkId: string; role: Role }) {
+    const user = await this.authService.updateUserRole(body.clerkId, body.role);
+    return { user };
   }
 }
