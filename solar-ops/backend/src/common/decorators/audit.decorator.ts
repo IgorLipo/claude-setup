@@ -1,12 +1,5 @@
-import { Module, Global } from '@nestjs/common';
-import { LoggerService } from './logger/logger.service';
+import { SetMetadata } from '@nestjs/common';
 
-@Global()
-@Module({
-  providers: [LoggerService],
-  exports: [LoggerService],
-})
-export class LoggerModule {}
-
-// Re-export for convenience
-export { AuditLog } from './audit.decorator';
+// Audit log action types
+export const AUDIT_ACTION_KEY = 'auditAction';
+export const AuditLog = (action: string) => SetMetadata(AUDIT_ACTION_KEY, action);
